@@ -83,8 +83,9 @@ exports.default = ModalController;
   var TEMPLATE = require('./gallery.template.js').default;
   var TEMPLATE_MODAL = require('./gallery.template.modal.js').default;
   var ModalController = require('./gallery.controller.modal.js').default;
+  require('./gallery.service.js');
 
-  var GumgaGalleryIcon = function GumgaGalleryIcon($uibModal) {
+  var GumgaGalleryIcon = function GumgaGalleryIcon($uibModal, GumgaGalleryService) {
     return {
       restrict: 'E',
       template: TEMPLATE,
@@ -143,17 +144,7 @@ exports.default = ModalController;
             inputSearchPlaceholder: scope.inputSearchPlaceholder || 'Qual ícone está procurando?',
             buttonSelectIconClass: scope.buttonSelectIconClass || 'btn btn-default'
           };
-          scope.galleries = scope.galleries || [{
-            name: 'Font Awesome',
-            prefix: 'fa',
-            url: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-            icons: []
-          }, {
-            name: 'Material Icons',
-            prefix: 'zmdi',
-            url: 'https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.css',
-            icons: []
-          }];
+          scope.galleries = scope.galleries || GumgaGalleryService.getGalleries();
           scope.galleries.forEach(function (gallery) {
             return putGalleryHead(gallery.url);
           });
@@ -207,12 +198,55 @@ exports.default = ModalController;
     };
   };
 
-  GumgaGalleryIcon.$inject = ['$uibModal'];
+  GumgaGalleryIcon.$inject = ['$uibModal', 'GumgaGalleryService'];
 
-  angular.module('gumga.gallery-icon', ['ui.bootstrap']).directive('gumgaGalleryIcon', GumgaGalleryIcon).controller('GalleryIconModalController', ModalController);
+  angular.module('gumga.gallery-icon', ['ui.bootstrap', 'gumga.gallery-icon.service']).directive('gumgaGalleryIcon', GumgaGalleryIcon).controller('GalleryIconModalController', ModalController);
 })();
 
-},{"./gallery.controller.modal.js":1,"./gallery.template.js":4,"./gallery.template.modal.js":5}],3:[function(require,module,exports){
+},{"./gallery.controller.modal.js":1,"./gallery.service.js":3,"./gallery.template.js":5,"./gallery.template.modal.js":6}],3:[function(require,module,exports){
+'use strict';
+
+(function () {
+  'use strict';
+
+  var GumgaGalleryService = function GumgaGalleryService() {
+
+    var galleries = [{
+      name: 'Font Awesome',
+      prefix: 'fa',
+      url: 'http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+      icons: []
+    }, {
+      name: 'Material Icons',
+      prefix: 'zmdi',
+      url: 'http://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css',
+      icons: []
+    }];
+
+    var getGalleries = function getGalleries() {
+      return galleries;
+    };
+
+    var setGalleries = function setGalleries(value) {
+      galleries = value;
+    };
+
+    return {
+      getGalleries: getGalleries,
+      setGalleries: setGalleries,
+      $get: function $get() {
+        return {
+          getGalleries: getGalleries,
+          setGalleries: setGalleries
+        };
+      }
+    };
+  };
+
+  angular.module('gumga.gallery-icon.service', []).provider('GumgaGalleryService', GumgaGalleryService);
+})();
+
+},{}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -220,7 +254,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = "\n\nbody.modal-open .gumga-gallery-icon-modal {\n  display: flex !important;\n  height: 100%;\n}\n\nbody.modal-open .gumga-gallery-icon-modal .modal-dialog {\n  margin: auto !important;\n  transition: all 1s ease-out;\n}\n\nbody.modal-open .gumga-gallery-icon-modal .modal-dialog .modal-content{\n  border-radius: 0px;\n  transition: all 10s ease-out;\n}\n\nbody.modal-open .gumga-gallery-icon-modal .modal-dialog .modal-content .modal-header{\n  background: #f5f5f5;\n}\n\nbody.modal-open .gumga-gallery-icon-modal .modal-dialog .modal-content .modal-body{\n  transition: all 5s ease-out;\n  transition: height .3s;\n  padding-bottom: 0;\n}\n\nbody.modal-open .gumga-gallery-icon-modal .modal-dialog .modal-content .modal-footer{\n  background: #f5f5f5;\n}\n\nbody.modal-open .gumga-gallery-icon-modal .modal-dialog .modal-content .modal-header > i{\n  margin-top: 10px;\n  cursor: pointer;\n}\n\n.gallery-icons-loading {\n  margin-top: 40px;\n  transition: all 5s ease-out;\n  transition: height .3s;\n}\n\n.gallery-icons-loading > i {\n  font-size: 40px;\n}\n\n.gallery-icons-loading > label {\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n\n.gallery-icons-collections{\n  max-height: 350px !important;\n  overflow: auto !important;\n  padding-top: 10px;\n  padding-left: 10px;\n}\n\n.gallery-icons-collections > div{\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  display: block;\n  color: #222;\n  line-height: 32px;\n  height: 32px;\n  padding-left: 10px;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\n.gallery-icons-collections > div:hover{\n  background: #f5f5f5;\n}\n\n.gallery-icons-collections > div.selected{\n  background: #adadad;\n  color: #fff;\n}\n\n.gallery-icons-collections > div > i{\n  font-size: 18px;\n}\n\n.gumga-gallery-icon-label-details{\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n\n";
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -235,7 +269,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = '\n\n  <style>' + _galleryStyle2.default + '</style>\n\n  <button class="{{buttonClass}}" data-ng-click="openModalIcons()" ng-show="!ngModel">\n    {{buttonText}}\n  </button>\n\n  <button class="{{buttonClass}}" data-ng-click="openModalIcons(ngModel)" ng-show="ngModel">\n    <i style="font-size: {{buttonIconSize}}px;" class="{{ngModel}}"></i> \n    <span ng-show="buttonShowIconText">{{ngModel}}</span>\n  </button>\n\n';
 
-},{"./gallery.style.js":3}],5:[function(require,module,exports){
+},{"./gallery.style.js":4}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

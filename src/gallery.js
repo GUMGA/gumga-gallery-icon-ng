@@ -4,8 +4,9 @@
   const TEMPLATE = require('./gallery.template.js').default;
   const TEMPLATE_MODAL = require('./gallery.template.modal.js').default;
   const ModalController = require('./gallery.controller.modal.js').default;
+  require('./gallery.service.js');
 
-  const GumgaGalleryIcon = ($uibModal) => {
+  const GumgaGalleryIcon = ($uibModal, GumgaGalleryService) => {
      return {
         restrict: 'E',
         template : TEMPLATE,
@@ -64,20 +65,7 @@
               inputSearchPlaceholder: scope.inputSearchPlaceholder || 'Qual ícone está procurando?',
               buttonSelectIconClass: scope.buttonSelectIconClass || 'btn btn-default'
             }
-            scope.galleries = scope.galleries || [
-              {
-                name: 'Font Awesome',
-                prefix: 'fa',
-                url: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-                icons: []
-              },
-              {
-                name: 'Material Icons',
-                prefix: 'zmdi',
-                url: 'https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.css',
-                icons: []
-              }
-            ]
+            scope.galleries = scope.galleries || GumgaGalleryService.getGalleries();
             scope.galleries.forEach(gallery => putGalleryHead(gallery.url));
           }
 
@@ -124,9 +112,9 @@
      }
   }
 
-  GumgaGalleryIcon.$inject = ['$uibModal'];
+  GumgaGalleryIcon.$inject = ['$uibModal', 'GumgaGalleryService'];
 
-  angular.module('gumga.gallery-icon', ['ui.bootstrap'])
+  angular.module('gumga.gallery-icon', ['ui.bootstrap', 'gumga.gallery-icon.service'])
     .directive('gumgaGalleryIcon', GumgaGalleryIcon)
     .controller('GalleryIconModalController', ModalController);
 
