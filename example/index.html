@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+    <meta charset="utf-8">
+    <title>Gumga Gallery Icons</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+
+  </head>
+  <body ng-controller="ctrl">
+    <br><br>
+
+    <div class="container" ng-init="entity = {}">
+      <button ng-click="entity = {icone: 'fa fa-user'}">Aplicar ícone</button> <br><br>
+      ngModel: {{entity.icone}} <br><br>
+
+
+
+      <gumga-gallery-icon
+        ng-model="entity.icone"
+        modal-size="medium"
+        backdrop="static"
+        button-text="Buscar icone"
+        input-search-placeholder="Qual ícone está procurando?"
+        modal-title="Galeria de ícones"
+        button-icon-size="18"
+        button-show-icon-text="false"
+        button-class="gmd btn btn-default"
+        button-select-icon-text="Usar esse ícone"
+        button-select-icon-class="gmd btn btn-default">
+      </gumga-gallery-icon>
+
+
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+    <script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="app.js"></script>
+    <script src="../dist/gumga-gallery-icon.js"></script>
+
+  </body>
+</html>

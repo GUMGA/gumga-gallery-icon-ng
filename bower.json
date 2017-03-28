@@ -1,0 +1,29 @@
+{
+  "name": "gumga-gallery-icon-ng",
+  "description": "Gumga Gallery Icon",
+  "version": "1.0.0",
+  "main": "./src/gallery.js",
+  "authors": [
+    "Gumga Tecnologia da Informação S/A"
+  ],
+  "license": "LGPL-3.0",
+  "keywords": [
+    "gumga",
+    "date",
+    "angular 1.x"
+  ],
+  "homepage": "https://github.com/gumga/gumga-gallery-icon-ng",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8"
+  },
+  "devDependencies": {
+    "angular-bootstrap": "^2.5.0"
+  }
+}
