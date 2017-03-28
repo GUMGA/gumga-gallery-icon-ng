@@ -22,19 +22,24 @@ var ModalController = function ModalController(scope, modalProperties, $uibModal
       return;
     };
     gallery.loading = true;
-    $http.get(gallery.url).then(function (resp) {
-      var css = resp.data,
-          regex = /\.([\w-]*):before/g;
-      gallery.icons = css.match(regex).map(function (icon) {
-        var item = {
-          icon: icon.replace(':before', '').replace('.', gallery.prefix.trim() + ' '),
-          selected: false
-        };
-        return item;
-      });
-      if (!ngModel) scope.selectIconDetails(gallery.icons[0]);
-      gallery.loading = false;
-      if (callback) callback(gallery);
+    $.ajax({
+      url: gallery.url,
+      type: 'GET',
+      success: function success(resp) {
+        var css = resp,
+            regex = /\.([\w-]*):before/g;
+        gallery.icons = css.match(regex).map(function (icon) {
+          var item = {
+            icon: icon.replace(':before', '').replace('.', gallery.prefix.trim() + ' '),
+            selected: false
+          };
+          return item;
+        });
+        if (!ngModel) scope.selectIconDetails(gallery.icons[0]);
+        gallery.loading = false;
+        if (callback) callback(gallery);
+        scope.$digest();
+      }
     });
   };
 

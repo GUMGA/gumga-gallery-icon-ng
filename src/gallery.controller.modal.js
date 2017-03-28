@@ -14,19 +14,24 @@ const ModalController = (scope, modalProperties, $uibModalInstance, $http, ngMod
       return;
     };
     gallery.loading = true;
-    $http.get(gallery.url).then(resp => {
-        let css = resp.data, regex = /\.([\w-]*):before/g;
-        gallery.icons = css.match(regex).map(icon => {
-          let item = {
-            icon: icon.replace(':before', '').replace('.', gallery.prefix.trim() + ' '),
-            selected: false
-          };
-          return item;
+    $.ajax({
+          url: gallery.url,
+          type: 'GET',
+          success: function (resp) {
+            let css = resp, regex = /\.([\w-]*):before/g;
+            gallery.icons = css.match(regex).map(icon => {
+              let item = {
+                icon: icon.replace(':before', '').replace('.', gallery.prefix.trim() + ' '),
+                selected: false
+              };
+              return item;
+            })
+            if(!ngModel) scope.selectIconDetails(gallery.icons[0]);
+            gallery.loading = false;
+            if(callback) callback(gallery);
+            scope.$digest();
+          }
         })
-        if(!ngModel) scope.selectIconDetails(gallery.icons[0]);
-        gallery.loading = false;
-        if(callback) callback(gallery);
-      })
   }
 
   if(ngModel){
