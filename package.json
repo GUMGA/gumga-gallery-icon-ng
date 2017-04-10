@@ -1,6 +1,6 @@
 {
   "name": "gumga-gallery-icon-ng",
-  "version" : "1.0.2",
+  "version" : "1.0.3",
   "description": "Gumga Gallery Icon",
   "main": "./src/gallery.js",
   "directories": {

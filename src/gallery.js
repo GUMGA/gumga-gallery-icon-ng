@@ -27,31 +27,6 @@
         require: '^ngModel',
         link: (scope, elm, attrs) => {
 
-          const checkIfExistsImport = (children, url) => {
-              let exists = false;
-              for (let i = 0; i < children.length; i++) {
-                if(children[i].nodeName == 'LINK'){
-                  let lastPosition = url.lastIndexOf('/') + 1;
-                  let cssName = url.substring(lastPosition, url.length).trim();
-                  if(children[i].href && children[i].href.indexOf(cssName) != -1){
-                     exists = true;
-                  }
-                }
-              }
-              return exists;
-          }
-
-          const putGalleryHead = (url) => {
-              let head = document.getElementsByTagName('head')[0];
-              let exists = checkIfExistsImport(head.children, url);
-              if(!exists) {
-                const element = document.createElement('link');
-                element.href = url;
-                element.rel = 'stylesheet';
-                head.appendChild(element);
-              }
-          }
-
           const init = () => {
             scope.buttonClass = scope.buttonClass || 'btn btn-default';
             scope.buttonText = scope.buttonText || 'Escolher ícone';
@@ -66,7 +41,7 @@
               buttonSelectIconClass: scope.buttonSelectIconClass || 'btn btn-default'
             }
             scope.galleries = scope.galleries || GumgaGalleryService.getGalleries();
-            scope.galleries.forEach(gallery => putGalleryHead(gallery.url));
+            GumgaGalleryService.applyImports(scope.galleries);
           }
 
           const getModalSize = () => {

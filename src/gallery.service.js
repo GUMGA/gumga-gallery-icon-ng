@@ -26,16 +26,49 @@
         galleries = value;
       }
 
+      const checkIfExistsImport = (children, url) => {
+          let exists = false;
+          for (let i = 0; i < children.length; i++) {
+            if(children[i].nodeName == 'LINK'){
+              let lastPosition = url.lastIndexOf('/') + 1;
+              let cssName = url.substring(lastPosition, url.length).trim();
+              if(children[i].href && children[i].href.indexOf(cssName) != -1){
+                 exists = true;
+              }
+            }
+          }
+          return exists;
+      }
+
+      const putGalleryHead = (url) => {
+          let head = document.getElementsByTagName('head')[0];
+          let exists = checkIfExistsImport(head.children, url);
+          if(!exists) {
+            const element = document.createElement('link');
+            element.href = url;
+            element.rel = 'stylesheet';
+            head.appendChild(element);
+          }
+      }
+
+      const applyImports = (galleries) => {
+        galleries = galleries || getGalleries();
+        galleries.forEach(gallery => putGalleryHead(gallery.url));
+      }
+
       return {
         getGalleries : getGalleries,
         setGalleries : setGalleries,
+        applyImports : applyImports,
         $get : function(){
           return {
             getGalleries : getGalleries,
-            setGalleries : setGalleries
+            setGalleries : setGalleries,
+            applyImports : applyImports
           }
         }
       };
+
   }
 
   angular.module('gumga.gallery-icon.service', [])

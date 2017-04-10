@@ -111,31 +111,6 @@ exports.default = ModalController;
       require: '^ngModel',
       link: function link(scope, elm, attrs) {
 
-        var checkIfExistsImport = function checkIfExistsImport(children, url) {
-          var exists = false;
-          for (var i = 0; i < children.length; i++) {
-            if (children[i].nodeName == 'LINK') {
-              var lastPosition = url.lastIndexOf('/') + 1;
-              var cssName = url.substring(lastPosition, url.length).trim();
-              if (children[i].href && children[i].href.indexOf(cssName) != -1) {
-                exists = true;
-              }
-            }
-          }
-          return exists;
-        };
-
-        var putGalleryHead = function putGalleryHead(url) {
-          var head = document.getElementsByTagName('head')[0];
-          var exists = checkIfExistsImport(head.children, url);
-          if (!exists) {
-            var element = document.createElement('link');
-            element.href = url;
-            element.rel = 'stylesheet';
-            head.appendChild(element);
-          }
-        };
-
         var init = function init() {
           scope.buttonClass = scope.buttonClass || 'btn btn-default';
           scope.buttonText = scope.buttonText || 'Escolher ícone';
@@ -150,9 +125,7 @@ exports.default = ModalController;
             buttonSelectIconClass: scope.buttonSelectIconClass || 'btn btn-default'
           };
           scope.galleries = scope.galleries || GumgaGalleryService.getGalleries();
-          scope.galleries.forEach(function (gallery) {
-            return putGalleryHead(gallery.url);
-          });
+          GumgaGalleryService.applyImports(scope.galleries);
         };
 
         var getModalSize = function getModalSize() {
@@ -236,13 +209,47 @@ exports.default = ModalController;
       galleries = value;
     };
 
+    var checkIfExistsImport = function checkIfExistsImport(children, url) {
+      var exists = false;
+      for (var i = 0; i < children.length; i++) {
+        if (children[i].nodeName == 'LINK') {
+          var lastPosition = url.lastIndexOf('/') + 1;
+          var cssName = url.substring(lastPosition, url.length).trim();
+          if (children[i].href && children[i].href.indexOf(cssName) != -1) {
+            exists = true;
+          }
+        }
+      }
+      return exists;
+    };
+
+    var putGalleryHead = function putGalleryHead(url) {
+      var head = document.getElementsByTagName('head')[0];
+      var exists = checkIfExistsImport(head.children, url);
+      if (!exists) {
+        var element = document.createElement('link');
+        element.href = url;
+        element.rel = 'stylesheet';
+        head.appendChild(element);
+      }
+    };
+
+    var applyImports = function applyImports(galleries) {
+      galleries = galleries || getGalleries();
+      galleries.forEach(function (gallery) {
+        return putGalleryHead(gallery.url);
+      });
+    };
+
     return {
       getGalleries: getGalleries,
       setGalleries: setGalleries,
+      applyImports: applyImports,
       $get: function $get() {
         return {
           getGalleries: getGalleries,
-          setGalleries: setGalleries
+          setGalleries: setGalleries,
+          applyImports: applyImports
         };
       }
     };
