@@ -1,7 +1,7 @@
 {
   "name": "gumga-gallery-icon-ng",
   "description": "Gumga Gallery Icon",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "./src/gallery.js",
   "authors": [
     "Gumga Tecnologia da Informação S/A"
